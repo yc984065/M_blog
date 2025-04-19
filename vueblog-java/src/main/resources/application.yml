@@ -1,0 +1,17 @@
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+server:
+  port: 8081
+mrblue:
+  jwt:
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+    expire: 864000
+    header: Authorization
+file:
+  upload:
+    path: D:/maven-work/vueblog-master/uploads/
+spring:
+  mvc:
+    static-path-pattern: /uploads/** # 修改静态资源访问路径模式
+  resources:
+    static-locations: file:D:/maven-work/vueblog-master/uploads/ # 配置静态资源文件的位置
