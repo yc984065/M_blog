@@ -30,6 +30,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     @Transactional
     public void updateBlogCategories(Long blogId, List<Long> categoryId) {
+        // 先删除旧的，再添加新的
         categoryMapper.deleteBlogCategories(blogId);
         if (categoryId != null && !categoryId.isEmpty()) {
             categoryMapper.insertBlogCategories(blogId, categoryId);

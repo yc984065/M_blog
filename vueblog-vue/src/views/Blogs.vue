@@ -1,15 +1,25 @@
 <template>
+<<<<<<< HEAD
   <div class="mcontainer">
     <Header />
     <div class="main-content">
       <!-- 搜索栏 + 分类 + 标签 -->
       <div class="filter-container">
+=======
+  <div class="mcontaner">
+    <Header />
+
+    <div class="block">
+      <!-- 搜索栏 + 分类 + 标签 -->
+      <div class="search-container">
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
         <!-- 搜索输入框 -->
         <el-input
           v-model="searchQuery"
           placeholder="🔍 搜索博客标题..."
           clearable
           @keyup.enter="handleSearch"
+<<<<<<< HEAD
           class="search-input"
         ></el-input>
 
@@ -19,6 +29,17 @@
           icon="el-icon-search"
           @click="handleSearch"
           class="search-button"
+=======
+          style="width: 300px; margin-right: 10px"
+        ></el-input>
+
+        <!-- 搜索按钮 -->
+        <el-button 
+          type="primary" 
+          icon="el-icon-search" 
+          @click="handleSearch"
+          style="margin-right: 20px"
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
         >
           搜索
         </el-button>
@@ -29,7 +50,11 @@
           placeholder="📂 分类"
           @change="handleSearch"
           clearable
+<<<<<<< HEAD
           class="select-box"
+=======
+          style="width: 150px; margin-right: 10px"
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
         >
           <el-option
             v-for="category in categories"
@@ -45,7 +70,11 @@
           placeholder="🏷️ 标签"
           @change="handleSearch"
           clearable
+<<<<<<< HEAD
           class="select-box"
+=======
+          style="width: 150px"
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
         >
           <el-option
             v-for="tag in tags"
@@ -54,6 +83,7 @@
             :value="tag.id"
           />
         </el-select>
+<<<<<<< HEAD
 
         <!-- 重置按钮 -->
         <el-button
@@ -64,10 +94,21 @@
         >
           重置
         </el-button>
+=======
+        <!-- 重置按钮 -->
+<el-button 
+  type="warning" 
+  icon="el-icon-refresh-left" 
+  @click="resetFilters"
+>
+  重置
+</el-button>
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
       </div>
 
       <!-- 时间线显示博客列表 -->
       <el-timeline>
+<<<<<<< HEAD
         <el-timeline-item
           v-for="blog in blogs"
           :key="blog.id"
@@ -75,6 +116,15 @@
           placement="top"
         >
           <el-card class="blog-card">
+=======
+        <el-timeline-item 
+          v-for="blog in blogs" 
+          :key="blog.id" 
+          :timestamp="blog.created" 
+          placement="top"
+        >
+          <el-card>
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
             <h4>
               <router-link :to="{ name: 'BlogDetail', params: { blogId: blog.id } }">
                 {{ blog.title }}
@@ -87,7 +137,11 @@
 
       <!-- 分页 -->
       <el-pagination
+<<<<<<< HEAD
         class="pagination"
+=======
+        class="mpage"
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
         background
         layout="prev, pager, next"
         :current-page="currentPage"
@@ -96,6 +150,10 @@
         @current-change="page"
         v-if="!searchMode"
       />
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
     </div>
   </div>
 </template>
@@ -123,6 +181,7 @@ export default {
   },
   methods: {
     // 分页加载
+<<<<<<< HEAD
     page(currentPage) {
   this.$axios
     .get("/blogs", {
@@ -157,18 +216,61 @@ export default {
     handleSearch() {
   clearTimeout(this.searchTimeout);
   this.searchTimeout = setTimeout(() => {
+=======
+    page(pageNumber) {
+  if (this.searchMode) {
+    this.handleSearch(pageNumber);
+  } else {
+    this.$axios
+      .get("/blogs", {
+        params: {
+          currentPage: pageNumber,
+          pageSize: this.pageSize
+        }
+      })
+      .then((res) => {
+        if (res.data.code === 200) {
+          this.blogs = res.data.data.records;
+          this.currentPage = res.data.data.current;
+          this.total = res.data.data.total;
+          this.pageSize = res.data.data.size;
+        }
+      })
+      .catch((error) => {
+        console.error("分页获取失败:", error);
+      });
+  }
+},
+    resetFilters() {
+  this.searchQuery = '';
+  this.selectedCategory = null;
+  this.selectedTag = null;
+  this.searchMode = false;
+  this.page(1); // 重新加载分页数据
+},
+    // 组合搜索函数
+    handleSearch(page = 1) {
+  clearTimeout(this.searchTimeout);
+  this.searchTimeout = setTimeout(() => {
+    // 没条件就走分页
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
     if (
       !this.searchQuery.trim() &&
       !this.selectedCategory &&
       !this.selectedTag
     ) {
       this.searchMode = false;
+<<<<<<< HEAD
       this.page(1); // 重新加载分页数据
+=======
+      this.page(1); 
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
       return;
     }
 
     this.searchMode = true;
 
+<<<<<<< HEAD
     const queryParams = {};
     if (this.searchQuery.trim()) {
       queryParams.query = this.searchQuery.trim();
@@ -177,6 +279,19 @@ export default {
       queryParams.categoryId = this.selectedCategory;
     }
     if (this.selectedTag !== null) {  // 确保标签已选
+=======
+    const queryParams = {
+      currentPage: page,
+      pageSize: this.pageSize,
+    };
+    if (this.searchQuery.trim()) {
+      queryParams.query = this.searchQuery.trim();
+    }
+    if (this.selectedCategory) {
+      queryParams.categoryId = this.selectedCategory;
+    }
+    if (this.selectedTag) {
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
       queryParams.tagId = this.selectedTag;
     }
 
@@ -184,6 +299,7 @@ export default {
       .get("/blogs/search", { params: queryParams })
       .then((res) => {
         if (res.data.code === 200) {
+<<<<<<< HEAD
           this.blogs = res.data.data;
         }
       })
@@ -205,6 +321,30 @@ export default {
     }
   });
 }
+=======
+          this.blogs = res.data.data.records;
+          this.currentPage = res.data.data.current;
+          this.total = res.data.data.total;
+          this.pageSize = res.data.data.size;
+        }
+      })
+      .catch((error) => {
+        console.error("搜索失败:", error);
+      });
+  }, 300);
+},
+
+
+    // 获取分类和标签数据
+    fetchMetaData() {
+      this.$axios.get("/categories").then((res) => {
+        this.categories = res.data.data;
+      });
+      this.$axios.get("/tags").then((res) => {
+        this.tags = res.data.data;
+      });
+    }
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
   },
   created() {
     if (this.$store.state.userInfo) {
@@ -219,6 +359,7 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 .blogs-container {
   padding-top: 30px;  /* 给博客页面增加顶部间隙 */
 }
@@ -238,11 +379,20 @@ export default {
 }
 
 .filter-container {
+=======
+.mpage {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.search-container {
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 20px;
   padding-left: 40px;
+<<<<<<< HEAD
   gap: 20px;
   background-color: #fafafa;
   border-radius: 8px;
@@ -307,5 +457,12 @@ export default {
 
 .el-divider {
   margin: 0;
+=======
+  gap: 10px;
+}
+
+.el-timeline {
+  padding-left: 40px;
+>>>>>>> 2aa2b4404c89557197a96d0dc77c9431d8744414
 }
 </style>
