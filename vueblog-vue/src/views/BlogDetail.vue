@@ -3,7 +3,8 @@
     <Header></Header>
 
     <div class="mblog">
-      <h2>{{ blog.title }}</h2>
+      <h1>{{ blog.title }}</h1>
+      <h2>{{ blog.description }}</h2>
       <el-link icon="el-icon-edit" v-if="ownBlog">
         <router-link :to="{ name: 'BlogEdit', params: { blogId: blog.id } }">
           编辑
@@ -58,6 +59,7 @@ export default {
       blog: {
         id: "",
         title: "",
+        description: "",
         content: "",
         categories: [],
         tags: []
@@ -73,6 +75,7 @@ export default {
       const blog = res.data.data;
       _this.blog.id = blog.id;
       _this.blog.title = blog.title;
+      _this.blog.description = blog.description;
       _this.blog.categories = blog.categories || [];
       _this.blog.tags = blog.tags || [];
 

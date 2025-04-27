@@ -1,6 +1,5 @@
 package com.mrblue.controller;
 
-
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -11,6 +10,7 @@ import com.mrblue.entity.Category;
 import com.mrblue.entity.Tag;
 import com.mrblue.service.BlogService;
 import com.mrblue.service.CategoryService;
+import com.mrblue.service.KeywordService;  // 引入关键词服务
 import com.mrblue.service.TagService;
 import com.mrblue.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @RestController
 public class BlogController {
@@ -34,6 +33,9 @@ public class BlogController {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    KeywordService keywordService;  // 注入关键词服务
 
     @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "5") Integer pageSize) {
@@ -99,6 +101,10 @@ public class BlogController {
         // 复制普通字段
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status", "categories", "tags");
 
+        // 在保存前检查并替换敏感词
+        temp.setTitle(keywordService.checkAndReplaceKeywords(temp.getTitle()));
+        temp.setDescription(keywordService.checkAndReplaceKeywords(temp.getDescription()));
+        temp.setContent(keywordService.checkAndReplaceKeywords(temp.getContent()));
 
         blogService.saveOrUpdate(temp);
 
@@ -119,7 +125,6 @@ public class BlogController {
         Assert.notNull(blog, "博客不存在");
         Assert.isTrue(blog.getUserId().longValue() == ShiroUtil.getProfile().getId().longValue(), "没有权限编辑");
     }
-
 
     @DeleteMapping("/blog/{id}")
     public Result delete(@PathVariable(name = "id") Long id) {
@@ -155,7 +160,6 @@ public class BlogController {
 
         return Result.succ(blogs);
     }
-
 
     @GetMapping("/categories")
     public Result listCategories() {
