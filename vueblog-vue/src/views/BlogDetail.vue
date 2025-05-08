@@ -63,6 +63,7 @@ export default {
         content: "",
         categories: [],
         tags: []
+        
       },
       ownBlog: false,
       loading: true,

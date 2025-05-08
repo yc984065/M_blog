@@ -40,22 +40,17 @@ public class AccountController {
 
     @PostMapping("/login")
     public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
-        log.debug("Login request: {}", loginDto);
         User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
         if (user == null) {
-            log.error("User not found: {}", loginDto.getUsername());
             return Result.fail("用户不存在");
         }
         String md5Password = SecureUtil.md5(loginDto.getPassword());
-        log.debug("Database password: {}, input password: {}", user.getPassword(), md5Password);
         if (!user.getPassword().equals(md5Password)) {
-            log.error("Password incorrect for user: {}", loginDto.getUsername());
             return Result.fail("密码不正确");
         }
         String jwt = jwtUtils.generateToken(user.getId());
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
-        log.debug("Login success, generate jwt: {}", jwt);
         return Result.succ(MapUtil.builder()
                 .put("id", user.getId())
                 .put("username", user.getUsername())

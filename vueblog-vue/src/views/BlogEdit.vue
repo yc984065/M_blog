@@ -52,11 +52,16 @@
         </el-form-item>
 
         <el-form-item label="内容" prop="content">
-          <mavon-editor v-model="ruleForm.content" ref="mdEditor"></mavon-editor>
+          <mavon-editor 
+    v-model="ruleForm.content" 
+    ref="mdEditor"
+    :toolbars="toolbars"
+    @imgAdd="handleImageAdd"
+  ></mavon-editor>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">发布</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
           <el-button 
             type="success" 
@@ -338,4 +343,14 @@ export default {
 .el-tag + .el-tag {
   margin-left: 10px;
 }
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 </style>
+

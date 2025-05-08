@@ -90,7 +90,17 @@ export default {
               }
             });
           }).catch(err => {
-            this.$message.error(err.response.data.msg || '注册失败');
+            const errorMsg = err.response.data.msg || '注册失败';
+            if (errorMsg.includes('用户名')) {
+              this.$alert('用户名已存在', '错误', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  // 保留已填写的信息，不需要做任何操作，因为表单数据未被清除
+                }
+              });
+            } else {
+              this.$message.error(errorMsg);
+            }
           });
         } else {
           console.log('error submit!!');
@@ -100,8 +110,8 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.ruleForm.avatar = null;
     },
-    // 添加的返回主页方法
     goHome() {
       this.$router.push("/");
     }

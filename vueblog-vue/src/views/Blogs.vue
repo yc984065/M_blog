@@ -81,6 +81,17 @@
               </router-link>
             </h4>
             <p>{{ blog.description }}</p>
+            <!-- 显示分类 -->
+            <p v-if="blog.category">
+              <strong>分类：</strong> {{ blog.category.name }}
+            </p>
+            <!-- 显示标签 -->
+            <p v-if="blog.tags && blog.tags.length > 0">
+              <strong>标签：</strong>
+              <span v-for="(tag, index) in blog.tags" :key="tag.id">
+                {{ tag.name }}<span v-if="index < blog.tags.length - 1">, </span>
+              </span>
+            </p>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -153,43 +164,43 @@ export default {
     },
     // 组合搜索函数
     handleSearch() {
-  clearTimeout(this.searchTimeout);
-  this.searchTimeout = setTimeout(() => {
-    if (
-      !this.searchQuery.trim() &&
-      !this.selectedCategory &&
-      !this.selectedTag
-    ) {
-      this.searchMode = false;
-      this.page(1); // 重新加载分页数据
-      return;
-    }
-
-    this.searchMode = true;
-
-    const queryParams = {};
-    if (this.searchQuery.trim()) {
-      queryParams.query = this.searchQuery.trim();
-    }
-    if (this.selectedCategory !== null) {  // 确保分类已选
-      queryParams.categoryId = this.selectedCategory;
-    }
-    if (this.selectedTag !== null) {  // 确保标签已选
-      queryParams.tagId = this.selectedTag;
-    }
-
-    this.$axios
-      .get("/blogs/search", { params: queryParams })
-      .then((res) => {
-        if (res.data.code === 200) {
-          this.blogs = res.data.data;
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        if (
+          !this.searchQuery.trim() &&
+          !this.selectedCategory &&
+          !this.selectedTag
+        ) {
+          this.searchMode = false;
+          this.page(1); // 重新加载分页数据
+          return;
         }
-      })
-      .catch((error) => {
-        console.error("Failed to search blogs:", error);
-      });
-  }, 300);
-},
+
+        this.searchMode = true;
+
+        const queryParams = {};
+        if (this.searchQuery.trim()) {
+          queryParams.query = this.searchQuery.trim();
+        }
+        if (this.selectedCategory !== null) {  // 确保分类已选
+          queryParams.categoryId = this.selectedCategory;
+        }
+        if (this.selectedTag !== null) {  // 确保标签已选
+          queryParams.tagId = this.selectedTag;
+        }
+
+        this.$axios
+          .get("/blogs/search", { params: queryParams })
+          .then((res) => {
+            if (res.data.code === 200) {
+              this.blogs = res.data.data;
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to search blogs:", error);
+          });
+      }, 300);
+    },
     // 获取分类和标签数据
     fetchMetaData() {
       this.$axios.get("/categories").then((res) => {
