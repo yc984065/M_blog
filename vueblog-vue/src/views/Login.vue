@@ -35,8 +35,8 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: "Mrblue", // 您可以清空用于实际使用
-        password: "984065220", // 您可以清空用于实际使用
+        username: "Mrblue", 
+        password: "984065220",
       },
       rules: {
         username: [
@@ -44,10 +44,10 @@ export default {
           { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" },
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" } // 通常密码校验也在 blur 时触发
+          { required: true, message: "请输入密码", trigger: "blur" } 
         ],
       },
-      loading: false, // 添加 loading 状态防止重复提交
+      loading: false, 
     };
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
       this.$axios.post("/login", this.ruleForm).then((res) => {
         if (res.data.code === 200 && res.headers["authorization"]) {
           const jwt = res.headers["authorization"];
-          const userInfo = res.data.data; // userInfo 应包含 role
+          const userInfo = res.data.data;
           console.log("登录成功，用户信息:", userInfo);
           
           this.$store.commit("SET_TOKEN", jwt);
@@ -66,7 +66,7 @@ export default {
           // 根据角色跳转
           if (userInfo && userInfo.role === 'admin') {
             this.$message.success("管理员登录成功！正在跳转到管理后台...");
-            this.$router.push({ name: 'AdminDashboard' }); // 使用路由名称跳转
+            this.$router.push({ name: 'AdminDashboard' });
           } else {
             this.$message.success("登录成功！");
             this.$router.push({ name: 'UserPage' }); // 跳转到用户主页
@@ -89,15 +89,13 @@ export default {
       this.$refs[formName].resetFields();
     },
     goHome() {
-      // 根据当前用户角色决定跳转到哪个主页，或者直接到公共主页
-      // 如果 store 中有用户信息，可以判断
       const userInfo = this.$store.getters.getUser;
 
         this.$router.push({ name: 'UserPage' }); // 默认用户主页
       
     },
   },
-}; // 在 export default 语句末尾添加了分号
+};
 </script>
 
 <style scoped>
@@ -117,7 +115,6 @@ export default {
 }
 
 .el-main {
-  /*background-color: #E9EEF3;*/
   color: #333;
   text-align: center;
   line-height: 160px;

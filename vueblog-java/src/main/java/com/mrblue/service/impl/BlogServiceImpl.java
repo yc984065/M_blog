@@ -63,7 +63,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
     }
 
     @Override
-    public IPage<Blog> getBlogsByPage(Integer currentPage, Integer pageSize, String query) { // 参数名从 title 改为 query
+    public IPage<Blog> getBlogsByPage(Integer currentPage, Integer pageSize, String query) {
         Page<Blog> page = new Page<>(currentPage, pageSize);
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 

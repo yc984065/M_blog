@@ -24,6 +24,15 @@
                <h3>博客管理</h3> <p>查看、搜索和删除所有用户发布的博客。</p> </div>
            </el-card>
          </el-col>
+        <el-col :xs="24" :sm="12" :md="8">
+          <el-card shadow="hover" class="dashboard-card" @click.native="navigateTo({ name: 'AdminCommentManagement' })">
+            <div class="card-content">
+              <i class="el-icon-chat-dot-round card-icon" style="color: #67C23A;"></i>
+              <h3>评论管理</h3>
+              <p>查看和删除系统中所有用户的评论。</p>
+            </div>
+          </el-card>
+        </el-col>
          </el-row>
     </div>
     <p style="text-align:center; color: #ccc; margin-top: 20px;">-- 管理仪表盘底部 --</p>
@@ -31,7 +40,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'; // 请再次确认 Header 组件的实际路径
+import Header from '@/components/Header.vue'; 
 import { mapGetters } from 'vuex';
 
 export default {
@@ -39,13 +48,12 @@ export default {
   components: { Header },
   computed: {
     ...mapGetters(['getUser']), 
-    adminUsername() {
-      // console.log('AdminDashboard computed: getUser is', this.getUser); 
+    adminUsername() { 
       return this.getUser ? this.getUser.username : '管理员';
     }
   },
   methods: {
-    navigateTo(routeTarget) { // routeTarget 可以是路径字符串或路由对象 { name: 'RouteName' }
+    navigateTo(routeTarget) { 
       let isSameRoute = false;
       const currentRoute = this.$route;
 
@@ -65,7 +73,6 @@ export default {
       if (!isSameRoute) {
         this.$router.push(routeTarget).catch(err => {
           if (err.name !== 'NavigationDuplicated') {
-            // 对于非重复导航错误，仍然建议打印出来以便调试
             console.error('Router navigation error:', err);
           }
         });
@@ -90,15 +97,15 @@ export default {
 }
 .admin-dashboard-container {
   padding: 20px;
-  max-width: 1100px; /* 可以适当调整宽度 */
+  max-width: 1100px; 
   margin: 20px auto;
-  flex-grow: 1; /* 使容器在 flex 布局中填充空间 */
+  flex-grow: 1; 
 }
 .dashboard-card {
   cursor: pointer;
   text-align: center;
   margin-bottom: 20px;
-  transition: all 0.3s ease; /* 添加悬浮效果 */
+  transition: all 0.3s ease; 
 }
 .dashboard-card:hover {
   transform: translateY(-5px);
@@ -111,7 +118,7 @@ export default {
   font-size: 48px;
   color: #409EFF;
   margin-bottom: 15px;
-  display: block; /* 确保图标独占一行 */
+  display: block; 
 }
 .dashboard-card h3 {
   margin: 10px 0;
@@ -127,7 +134,7 @@ h1 {
   color: #303133;
   margin-bottom: 10px;
 }
-p { /* 针对 <p v-if="getUser"> 的样式 */
+p {
   color: #606266;
   margin-bottom: 20px;
 }

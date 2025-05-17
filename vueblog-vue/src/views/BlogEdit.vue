@@ -335,19 +335,15 @@ export default {
             this.$router.push({ name: this.isAdmin ? 'AdminBlogManagement' : 'UserPage' });
           }
         } else {
-          // 新建博客模式，重置表单（确保表单是干净的）
           this.ruleForm = { id: null, title: "", description: "", content: "", categoryIds: [], tagIds: [] };
         }
       } catch (error) {
         console.error("Error during initial data fetch for BlogEdit:", error.response || error);
         this.$message.error('加载编辑页面初始数据时发生网络错误');
-        // 考虑是否需要跳转到错误页或列表页
       } finally {
         this.pageLoading = false; // 页面加载完成
       }
     },
-    // fetchCategoriesAndTags 和 fetchBlogData 方法现在被合并到 fetchInitialData 中
-    // 以便更好地控制整体的 pageLoading 状态
   },
   created() {
     this.fetchInitialData(); 
@@ -366,8 +362,8 @@ export default {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
 }
 .form-loading-container {
-  min-height: 400px; /* 确保加载时容器有高度 */
-  position: relative; /* 为了 v-loading 的定位 */
+  min-height: 400px; 
+  position: relative;
 }
 
 .loading-spinner {

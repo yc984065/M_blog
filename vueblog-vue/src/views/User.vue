@@ -2,9 +2,7 @@
   <div class="mcontainer">
     <Header />
     <div class="main-content">
-      <!-- 搜索栏 + 分类 + 标签 -->
       <div class="filter-container">
-        <!-- 搜索输入框 -->
         <el-input
           v-model="searchQuery"
           placeholder="🔍 搜索博客标题..."
@@ -12,8 +10,6 @@
           @keyup.enter="handleSearch"
           class="search-input"
         ></el-input>
-
-        <!-- 搜索按钮 -->
         <el-button
           type="primary"
           icon="el-icon-search"
@@ -22,8 +18,6 @@
         >
           搜索
         </el-button>
-
-        <!-- 分类下拉 -->
         <el-select
           v-model="selectedCategory"
           placeholder="📂 分类"
@@ -38,8 +32,6 @@
             :value="category.id"
           />
         </el-select>
-
-        <!-- 标签下拉 -->
         <el-select
           v-model="selectedTag"
           placeholder="🏷️ 标签"
@@ -54,8 +46,6 @@
             :value="tag.id"
           />
         </el-select>
-
-        <!-- 重置按钮 -->
         <el-button
           type="warning"
           icon="el-icon-refresh-left"
@@ -65,8 +55,6 @@
           重置
         </el-button>
       </div>
-
-      <!-- 时间线显示博客列表 -->
       <el-timeline>
         <el-timeline-item
           v-for="blog in blogs"
@@ -81,11 +69,9 @@
               </router-link>
             </h4>
             <p>{{ blog.description }}</p>
-            <!-- 显示分类 -->
             <p v-if="blog.category">
               <strong>分类：</strong> {{ blog.category.name }}
             </p>
-            <!-- 显示标签 -->
             <p v-if="blog.tags && blog.tags.length > 0">
               <strong>标签：</strong>
               <span v-for="(tag, index) in blog.tags" :key="tag.id">
@@ -95,8 +81,6 @@
           </el-card>
         </el-timeline-item>
       </el-timeline>
-
-      <!-- 分页 -->
       <el-pagination
         class="pagination"
         background
@@ -162,7 +146,6 @@ export default {
       this.searchMode = false;
       this.page(1); // 重新加载分页数据
     },
-    // 组合搜索函数
     handleSearch() {
       clearTimeout(this.searchTimeout);
       this.searchTimeout = setTimeout(() => {
@@ -182,10 +165,10 @@ export default {
         if (this.searchQuery.trim()) {
           queryParams.query = this.searchQuery.trim();
         }
-        if (this.selectedCategory !== null) {  // 确保分类已选
+        if (this.selectedCategory !== null) {
           queryParams.categoryId = this.selectedCategory;
         }
-        if (this.selectedTag !== null) {  // 确保标签已选
+        if (this.selectedTag !== null) { 
           queryParams.tagId = this.selectedTag;
         }
 
@@ -225,7 +208,7 @@ export default {
 
 <style scoped>
 .blogs-container {
-  padding-top: 30px;  /* 给博客页面增加顶部间隙 */
+  padding-top: 30px; 
 }
 .mcontainer {
   font-family: 'Arial', sans-serif;

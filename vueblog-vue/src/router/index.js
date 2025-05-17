@@ -8,6 +8,7 @@ import Register from '../views/Register.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import AdminKeywords from '../views/AdminKeywords.vue' 
 import AdminBlogManagement from '../views/AdminBlogManagement.vue'
+import AdminCommentManagement from '../views/AdminCommentManagement.vue'
 
 Vue.use(VueRouter)
 
@@ -76,13 +77,23 @@ const routes = [
     }
   },
   {
-    path: '/admin/blogs', // 新路径
+    path: '/admin/blogs', 
     name: 'AdminBlogManagement',
     component: AdminBlogManagement,
     meta: {
       requireAuth: true,
       requireAdmin: true,
-      title: '博客管理' // 可选，用于面包屑或页面标题
+      title: '博客管理' 
+    }
+  },
+  {
+    path: '/admin/comments',
+    name: 'AdminCommentManagement',
+    component: AdminCommentManagement,
+    meta: {
+      requireAuth: true,
+      requireAdmin: true,
+      title: '评论管理'
     }
   }
 ]

@@ -95,9 +95,8 @@
         currentPage: 1,
         pageSize: 10, 
         totalBlogs: 0,
-        filters: { // 新增：用于存储搜索条件
+        filters: { 
           query: '',
-          // userId: '' // 如果添加了按作者ID搜索
         }
       };
     },
@@ -110,10 +109,8 @@
         const params = {
           currentPage: this.currentPage,
           pageSize: this.pageSize,
-          query: this.filters.query.trim() // 新增：将标题搜索条件传递给后端
-          // userId: this.filters.userId.trim() // 如果添加了按作者ID搜索
+          query: this.filters.query.trim() 
         };
-        // 移除空的搜索参数，避免传递空字符串给后端
         Object.keys(params).forEach(key => {
           if (params[key] === '' || params[key] === null || params[key] === undefined) {
             delete params[key];
@@ -200,15 +197,12 @@
         this.currentPage = 1; 
         this.fetchBlogs();
       },
-      // 新增：处理搜索的方法
       handleSearch() {
         this.currentPage = 1; // 搜索时通常重置到第一页
         this.fetchBlogs();
       },
-      // 新增：重置搜索条件的方法
       resetSearch() {
         this.filters.query = '';
-        // this.filters.userId = ''; // 如果添加了按作者ID搜索
         this.currentPage = 1;
         this.fetchBlogs();
       }
@@ -239,14 +233,14 @@
     color: #606266;
     font-size: 14px;
   }
-  .search-form { /* 搜索表单样式 */
+  .search-form { 
     margin-bottom: 20px;
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 6px;
   }
   .search-form .el-form-item {
-    margin-bottom: 0; /* 移除行内表单项的下边距 */
+    margin-bottom: 0; 
   }
   .el-table .el-link {
     font-weight: normal; 

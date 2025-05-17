@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -21,11 +23,18 @@ import java.util.Date;
 @ConfigurationProperties(prefix = "mrblue.jwt")
 public class JwtUtils {
 
+    private String secret;
     private long expire;
     private String header;
 
     // 使用 Keys.secretKeyFor(SignatureAlgorithm.HS512) 生成安全的密钥
     private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        log.info("JWT SecretKey initialized successfully.");
+    }
 
     /**
      * 生成JWT token

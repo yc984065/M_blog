@@ -65,7 +65,7 @@ export default {
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '邮箱格式不正确', trigger: ['blur', 'change'] } // 建议 'change' 也触发
+          { type: 'email', message: '邮箱格式不正确', trigger: ['blur', 'change'] } 
         ],
         role: [ // 为角色添加校验规则
           { required: true, message: '请选择注册身份', trigger: 'change' }
@@ -120,8 +120,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.ruleForm.avatar = null;
-      this.ruleForm.role = 'user'; // 重置角色为默认值
-      // 清除文件输入框的值（如果需要）
+      this.ruleForm.role = 'user'; 
       const fileInput = this.$el.querySelector('input[type="file"]');
       if (fileInput) {
         fileInput.value = '';

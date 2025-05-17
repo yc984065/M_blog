@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'; // 确认 Header 组件的实际路径
+import Header from '@/components/Header.vue';
 
 export default {
   components: { Header },
@@ -78,7 +78,6 @@ export default {
     },
     fetchKeywords() {
       this.listLoading = true;
-      // **关键修改：确保API路径与后端 KeywordController 定义的一致**
       this.$axios.get("/admin/keywords/list") 
         .then(res => {
           if (res.data.code === 200) {
@@ -101,7 +100,6 @@ export default {
         return;
       }
       this.addLoading = true;
-      // **关键修改：确保API路径与后端 KeywordController 定义的一致**
       this.$axios.post("/admin/keywords/add", { keyword: this.newKeywordText.trim() })
         .then(res => {
           if (res.data.code === 200) {
@@ -131,7 +129,6 @@ export default {
           this.$set(this.keywordsList[keywordIndex], 'deleteLoading', true);
         }
         
-        // **关键修改：确保API路径与后端 KeywordController 定义的一致**
         this.$axios.delete(`/admin/keywords/delete/${id}`)
           .then(res => {
             if (res.data.code === 200) {
@@ -158,18 +155,18 @@ export default {
 <style scoped>
 .admin-keywords-container {
   padding: 20px;
-  max-width: 900px; /* 可以根据内容调整 */
+  max-width: 900px;
   margin: 20px auto;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
-.admin-keywords-container > h2 { /* 页面主标题 */
+.admin-keywords-container > h2 { 
   margin-bottom: 10px;
   font-size: 22px;
   color: #303133;
 }
-.admin-keywords-container > p { /* 页面描述文字 */
+.admin-keywords-container > p {
   margin-bottom: 20px;
   color: #606266;
   font-size: 14px;
