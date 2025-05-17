@@ -15,4 +15,6 @@ public class AccountProfile implements Serializable {
 
     private String email;
 
+    private String role;
+
 }

@@ -27,11 +27,12 @@ export default new Vuex.Store({
 
   },
   getters: {
-    // get
     getUser: state => {
-      return state.userInfo
+      return state.userInfo;
+    },
+    isAdmin: state => {
+      return state.userInfo && state.userInfo.role === 'admin';
     }
-
   },
   actions: {
   },

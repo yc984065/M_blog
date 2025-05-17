@@ -19,4 +19,7 @@ public class RegisterDto {
     private String email;
 
     private MultipartFile avatar; // 接收头像文件
+
+    @NotBlank(message = "角色不能为空")
+    private String role;
 }

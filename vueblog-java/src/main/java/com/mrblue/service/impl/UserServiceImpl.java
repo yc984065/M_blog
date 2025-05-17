@@ -42,6 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(SecureUtil.md5(registerDto.getPassword())); // 使用 MD5 加密密码
         user.setEmail(registerDto.getEmail());
         user.setCreated(LocalDateTime.now());
+        user.setRole(registerDto.getRole());
         user.setStatus(0); // 默认状态为正常
 
         // 处理头像上传

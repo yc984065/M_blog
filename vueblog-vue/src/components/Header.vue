@@ -7,64 +7,87 @@
     </div>
 
     <div class="maction">
-      <span><el-link href="/blogs">主页</el-link></span>
+      <span>
+        <el-link @click="navigateTo(userHomePageLink)" :underline="false">主页</el-link>
+      </span>
       <el-divider direction="vertical"></el-divider>
-      <span><el-link type="success" href="/blog/add">发表博客</el-link></span>
+      <span>
+        <el-link type="success" @click="navigateTo('/blog/add')" :underline="false">发表博客</el-link>
+      </span>
 
       <el-divider direction="vertical"></el-divider>
-      <span v-show="!hasLogin"><el-link type="primary" href="/login">登录</el-link></span>
+      <span v-if="!hasLogin">
+        <el-link type="primary" @click="navigateTo('/login')" :underline="false">登录</el-link>
+      </span>
 
-      <span v-show="hasLogin"><el-link type="danger" @click="logout">退出</el-link></span>
+      <span v-if="hasLogin">
+        <el-link type="danger" @click="logout" :underline="false">退出</el-link>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'; 
+
 export default {
   name: "Header",
-  data() {
-    return {
-      user: {
-        username: '请先登录',
-        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
-      },
-      hasLogin: false
-    }
-  },
   computed: {
-    avatarUrl() {
-      // 如果头像路径以 /uploads/ 开头，则拼接后端端口号
-      if (this.user.avatar && this.user.avatar.startsWith('/uploads/')) {
-        return `http://localhost:8081${this.user.avatar}`;
-      }
-      // 否则，假设头像路径是外部 URL 或相对路径，直接返回
-      return this.user.avatar;
+    ...mapGetters(['getUser', 'isAdmin']),
+    
+    user() {
+      return this.getUser || { username: '请先登录', avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png' };
     },
+    hasLogin() {
+      return !!this.$store.state.token && this.getUser && typeof this.getUser.id !== 'undefined';
+    },
+    avatarUrl() {
+      const avatarPath = this.user.avatar;
+      if (avatarPath && avatarPath.startsWith('/uploads/')) {
+        return `http://localhost:8081${avatarPath}`; // 确保端口和后端一致
+      }
+      return avatarPath || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
+    },
+    userHomePageLink() {
+      if (this.hasLogin && this.isAdmin) {
+        return { name: 'AdminDashboard' }; // 或者 { name: 'AdminDashboard' }
+      }
+      return { name: 'UserPage' }; // 或者 { name: 'UserPage' }
+    }
   },
   methods: {
     logout() {
-      const _this = this;
-      _this.$axios.get("/logout", {
-        headers: {
-          "Authorization": localStorage.getItem("token")
-        }
-      }).then(res => {
-        _this.$store.commit("REMOVE_INFO");
-        localStorage.removeItem("token"); // 移除本地存储的 token
-        _this.$router.push("/login");
+      this.$axios.get("/logout").then(res => {
+        this.$store.commit("REMOVE_INFO");
+        this.$router.push("/login"); // 跳转到登录页
       }).catch(error => {
-        console.error("退出失败:", error);
-        localStorage.removeItem("token"); // 移除本地存储的 token
-        _this.$router.push("/login");
+        console.error("退出操作异常:", error);
+        this.$store.commit("REMOVE_INFO");
+        this.$router.push("/login");
       });
-    }
-  },
-  created() {
-    if (this.$store.getters.getUser.username) {
-      this.user.username = this.$store.getters.getUser.username
-      this.user.avatar = this.$store.getters.getUser.avatar
-
-      this.hasLogin = true
+    },
+    goToAdminDashboard() {
+      this.$router.push({ name: 'AdminDashboard' });
+    },
+    navigateTo(path) { // 通用导航方法
+      if (this.$route.path !== path && !(this.$route.name === path.name && JSON.stringify(this.$route.params) === JSON.stringify(path.params))) {
+        // 如果是字符串路径
+        if (typeof path === 'string') {
+          this.$router.push(path).catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              console.error(err);
+            }
+          });
+        } 
+        // 如果是对象路径 (例如 { name: 'RouteName' })
+        else if (typeof path === 'object' && path !== null) {
+           this.$router.push(path).catch(err => {
+            if (err.name !== 'NavigationDuplicated') {
+              console.error(err);
+            }
+          });
+        }
+      }
     }
   }
 }
@@ -78,5 +101,8 @@ export default {
 }
 .maction {
   margin: 10px 0;
+}
+.el-link { /* 确保链接有指针手势 */
+  cursor: pointer;
 }
 </style>

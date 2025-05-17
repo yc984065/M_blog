@@ -35,51 +35,69 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: "Mrblue",
-        password: "984065220",
+        username: "Mrblue", // 您可以清空用于实际使用
+        password: "984065220", // 您可以清空用于实际使用
       },
       rules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" },
         ],
-        password: [{ required: true, message: "请选择密码", trigger: "change" }],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" } // 通常密码校验也在 blur 时触发
+        ],
       },
+      loading: false, // 添加 loading 状态防止重复提交
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const _this = this;
-          this.$axios.post("/login", this.ruleForm).then((res) => {
-            console.log(res.data);
-            const jwt = res.headers["authorization"];
-            const userInfo = res.data.data;
+  this.$refs[formName].validate((valid) => {
+    if (valid) {
+      this.$axios.post("/login", this.ruleForm).then((res) => {
+        if (res.data.code === 200 && res.headers["authorization"]) {
+          const jwt = res.headers["authorization"];
+          const userInfo = res.data.data; // userInfo 应包含 role
+          console.log("登录成功，用户信息:", userInfo);
+          
+          this.$store.commit("SET_TOKEN", jwt);
+          this.$store.commit("SET_USERINFO", userInfo);
 
-            // 把数据共享出去
-            _this.$store.commit("SET_TOKEN", jwt);
-            _this.$store.commit("SET_USERINFO", userInfo);
-
-            // 获取
-            console.log(_this.$store.getters.getUser);
-
-            _this.$router.push("/blogs");
-          });
+          // 根据角色跳转
+          if (userInfo && userInfo.role === 'admin') {
+            this.$message.success("管理员登录成功！正在跳转到管理后台...");
+            this.$router.push({ name: 'AdminDashboard' }); // 使用路由名称跳转
+          } else {
+            this.$message.success("登录成功！");
+            this.$router.push({ name: 'UserPage' }); // 跳转到用户主页
+          }
         } else {
-          console.log("error submit!!");
-          return false;
+          this.$message.error(res.data.msg || '登录失败，请检查您的凭据');
         }
+      }).catch(err => {
+        console.error("登录请求失败:", err);
+        const errorMsg = err.response?.data?.msg || err.message || '登录请求异常';
+        this.$message.error(errorMsg);
       });
-    },
+    } else {
+      console.log("登录表单校验失败");
+      return false;
+    }
+  });
+},
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     goHome() {
-      this.$router.push("/"); // 返回主页
+      // 根据当前用户角色决定跳转到哪个主页，或者直接到公共主页
+      // 如果 store 中有用户信息，可以判断
+      const userInfo = this.$store.getters.getUser;
+
+        this.$router.push({ name: 'UserPage' }); // 默认用户主页
+      
     },
   },
-};
+}; // 在 export default 语句末尾添加了分号
 </script>
 
 <style scoped>

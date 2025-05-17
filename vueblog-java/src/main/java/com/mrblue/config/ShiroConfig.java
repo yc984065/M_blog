@@ -54,6 +54,7 @@ public class ShiroConfig {
         factoryBean.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
+
         filterMap.put("/login", "anon");
         filterMap.put("/register", "anon");
         filterMap.put("/api/ai/**", "anon"); // 新增AI接口匿名访问

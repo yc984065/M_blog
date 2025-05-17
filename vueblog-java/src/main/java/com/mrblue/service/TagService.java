@@ -14,6 +14,7 @@ public interface TagService extends IService<Tag> {
     /**
      * 更新博客的标签关联
      */
+
     void updateBlogTags(Long blogId, List<Long> tagIds);
 
     /**

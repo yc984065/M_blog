@@ -8,4 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService extends IService<User> {
 
     boolean register(RegisterDto registerDto, MultipartFile avatar);
+
 }

@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
-import Blogs from '../views/Blogs.vue'
+import UserPage from '../views/User.vue'
 import BlogEdit from '../views/BlogEdit.vue'
 import BlogDetail from '../views/BlogDetail.vue'
 import Register from '../views/Register.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
+import AdminKeywords from '../views/AdminKeywords.vue' 
+import AdminBlogManagement from '../views/AdminBlogManagement.vue'
 
 Vue.use(VueRouter)
 
@@ -12,12 +15,15 @@ const routes = [
   {
     path: '/',
     name: 'Index',
-    redirect: {name: "Blogs"}
+    redirect: {name: "UserPage"}
   },
   {
-    path: '/blogs',
-    name: 'Blogs',
-    component: Blogs
+    path: '/user',
+    name: 'UserPage',
+    component: UserPage,
+    meta: {
+      requireAuth: true // 用户主页通常需要登录
+    }
   },
   {
     path: '/login',
@@ -49,6 +55,35 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+
+  {
+    path: '/dashboard',
+        name: 'AdminDashboard',
+        component: AdminDashboard,
+        meta: {
+          requireAuth: true, 
+          requireAdmin: true
+        }
+  },
+  {
+    path: '/admin/keywords',
+    name: 'AdminKeywords',
+    component: AdminKeywords,
+    meta: {
+      requireAuth: true,
+      requireAdmin: true
+    }
+  },
+  {
+    path: '/admin/blogs', // 新路径
+    name: 'AdminBlogManagement',
+    component: AdminBlogManagement,
+    meta: {
+      requireAuth: true,
+      requireAdmin: true,
+      title: '博客管理' // 可选，用于面包屑或页面标题
+    }
   }
 ]
 

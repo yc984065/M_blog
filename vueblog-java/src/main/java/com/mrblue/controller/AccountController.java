@@ -56,6 +56,7 @@ public class AccountController {
                 .put("username", user.getUsername())
                 .put("avatar", user.getAvatar())
                 .put("email", user.getEmail())
+                .put("role", user.getRole())
                 .map()
         );
     }
@@ -91,7 +92,8 @@ public class AccountController {
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("email") String email,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam("role") String role
     ) throws IOException {
         // 检查用户名和邮箱是否已存在
         if (userService.getOne(new QueryWrapper<User>().eq("username", username)) != null) {
@@ -107,6 +109,7 @@ public class AccountController {
         user.setPassword(SecureUtil.md5(password));
         user.setEmail(email);
         user.setCreated(LocalDateTime.now());
+        user.setRole(role);
         user.setStatus(0);
 
         // 处理头像上传
